@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>
+Kerning and glyph building
+</title>
+<link href="../default.css" type="text/css" rel="stylesheet" />
+<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700' rel='stylesheet' type='text/css'>
+</head><body>
+<div class="leftcontent">
+<p class="menu">
+	<a href="../index.html">
+		Home
+	</a>
+	
+	
+</p>
+<p class="menu">
+	<a href="../howto/index.html">
+		How to's
+	</a>
+	<br />
+	<a href="index.html">
+		Step by step intro
+	</a>
+	<br />
+	<a href="../objects/index.html">
+		Object reference
+	</a>
+</p>
+</div>
+<div class="content">
+<h1>
+Kerning and building Glyphs
+</h1>
+<img src="http://robofab.com/img/
+ondrawmodel_11.gif" />
+<h2>Kerning</h2>
+<p>
+	All kerning data of a font is represented by the <strong>Kerning</strong> object. This object behaves like a Python dictionary: the key is a tuple of two glyph or groupnames, the dictionary value is the kern distance.
+</p>
+<p>In FontLab, font.kerning should not be called repeatedly like a normal attribute. Nothing will go wrong if you do, it will just be slow. The reason for this is that font.kerning is an attribute which (under the hood) has to do a lot of work to collect the data from the underlying FontLab file. Kerning in FontLab is stored at the glyph level, so to pull it up to the RoboFab level a massive iteration must occur when the kerning object is created. This happens each time you ask for the font.kerning attribute. But there's a simple way to work with that efficiently: cache the kerning object. Like so:
+</p>
+<div class="pythonsource"><pre># robothon 2009<br># work with kerning 1<br> <br><span class="py_res">from</span> <span class="py_key">robofab</span>.<span class="py_key">world</span> <span class="py_res">import</span> <span class="py_key">CurrentFont</span><br><span class="py_key">font</span> = <span class="py_key">CurrentFont</span>()<br> <br># now the kerning object is generated once<br><span class="py_key">kerning</span> = <span class="py_key">font</span>.<span class="py_key">kerning</span><br> <br># and ready for your instructions.<br><span class="py_res">print</span> <span class="py_key">kerning</span><br><span class="py_res">print</span> <span class="py_key">len</span>(<span class="py_key">kerning</span>)<br><span class="py_res">print</span> <span class="py_key">kerning</span>.<span class="py_key">keys</span>()<br> <br># proceed to work with the myKerning object<br># this happens in the following examples too.</pre></div><div class="pythonsourcetitle"><a href="examples/workWithKerning1.py" target="new"><strong>➔ Download this.</strong></a></div>
+<div class="pythonoutput"><pre>&lt;<span class="py_key">RKerning</span> <span class="py_res">for</span> <span class="py_key">MyFont</span> <span class="py_key">Normal</span>&gt;<br><span class="py_num">3141</span><br>[(<span class="py_str">'F'</span>, <span class="py_str">'L'</span>), (<span class="py_str">'D'</span>, <span class="py_str">'G'</span>), (<span class="py_str">'N'</span>, <span class="py_str">'Eacute'</span>), ..<span class="py_key">etc</span>.. ]</pre></div>
+<p>
+	The Kerning object has some useful methods to transform and analyse the data.
+</p>
+<div class="pythonsource"><pre># robothon 2009<br># work with kerning 2<br><span class="py_res">from</span> <span class="py_key">robofab</span>.<span class="py_key">world</span> <span class="py_res">import</span> <span class="py_key">CurrentFont</span><br><span class="py_key">font</span> = <span class="py_key">CurrentFont</span>()<br><span class="py_key">kerning</span> = <span class="py_key">font</span>.<span class="py_key">kerning</span><br> <br># calculate the average offset<br><span class="py_res">print</span> <span class="py_key">kerning</span>.<span class="py_key">getAverage</span>()<br> <br># count pairs with these glyphs<br><span class="py_res">print</span> <span class="py_key">kerning</span>.<span class="py_key">occurrenceCount</span>([<span class="py_str">"a"</span>, <span class="py_str">"b"</span>])<br> <br># get the maximum values<br><span class="py_res">print</span> <span class="py_key">kerning</span>.<span class="py_key">getExtremes</span>()<br> <br># count the pars<br><span class="py_res">print</span> <span class="py_str">"font has %d kerning pairs"</span> % <span class="py_key">len</span>(<span class="py_key">kerning</span>)<br> <br># this prints all the pairs<br><span class="py_res">for</span> (<span class="py_key">left</span>, <span class="py_key">right</span>), <span class="py_key">value</span> <span class="py_res">in</span> <span class="py_key">kerning</span>.<span class="py_key">items</span>():<br>&nbsp; &nbsp; <span class="py_res">print</span> (<span class="py_key">left</span>, <span class="py_key">right</span>), <span class="py_key">value</span><br>&nbsp; &nbsp; <br></pre></div><div class="pythonsourcetitle"><a href="examples/workWithKerning2.py" target="new"><strong>➔ Download this.</strong></a></div>
+<div class="pythonoutput"><pre>&lt;<span class="py_key">RKerning</span> <span class="py_res">for</span> <span class="py_key">MyFont</span> <span class="py_key">Normal</span>&gt;<br>-<span class="py_num">20.5953517988</span><br>{<span class="py_str">'a'</span>: <span class="py_num">82</span>, <span class="py_str">'b'</span>: <span class="py_num">52</span>}<br>(-<span class="py_num">191</span>, <span class="py_num">184</span>)<br><span class="py_key">font</span> <span class="py_key">has</span> <span class="py_num">3141</span> <span class="py_key">kerning</span> <span class="py_key">pairs</span><br>(<span class="py_str">'F'</span>, <span class="py_str">'L'</span>) -<span class="py_num">7</span><br>(<span class="py_str">'D'</span>, <span class="py_str">'G'</span>) <span class="py_num">31</span><br>(<span class="py_str">'N'</span>, <span class="py_str">'Eacute'</span>) -<span class="py_num">34</span><br>(<span class="py_str">'agrave.sc'</span>, <span class="py_str">'z'</span>) -<span class="py_num">7</span><br>(<span class="py_str">'K'</span>, <span class="py_str">'v'</span>) -<span class="py_num">111</span><br>(<span class="py_str">'Z'</span>, <span class="py_str">'N'</span>) -<span class="py_num">15</span><br>..<span class="py_key">etc</span>..</pre></div>
+<p>
+	In the example above you see the Kerning object as attribute of a font object, then it is cached by storing it in a new variable. <strong>len(kerning)</strong> gives you the length of the kerning dictionary, the number of kern pairs. Have a look at the attributes and methods of the <a href="http://robofab.com/objects/kerning.html" target="new" class="reference">Kerning object here.</a> It has some very useful methods for interpolating, sorting, combining and splitting kern tables. Back to the example, did you note that the kern pairs appear in random order? It's that Python dictionary thing again: keys of a dictionary have no particular order. Just like the example of the glyphnames in a font object.
+</p>
+<div class="pythonsource"><pre># robothon 2009<br># work with kerning 3<br># print a specific set of pairs<br> <br><span class="py_res">from</span> <span class="py_key">robofab</span>.<span class="py_key">world</span> <span class="py_res">import</span> <span class="py_key">CurrentFont</span><br><span class="py_key">font</span> = <span class="py_key">CurrentFont</span>()<br><span class="py_key">kerning</span> = <span class="py_key">font</span>.<span class="py_key">kerning</span><br><span class="py_res">for</span> <span class="py_key">left</span>, <span class="py_key">right</span> <span class="py_res">in</span> <span class="py_key">kerning</span>.<span class="py_key">keys</span>():<br>&nbsp; &nbsp; <span class="py_res">if</span> <span class="py_key">kerning</span>[(<span class="py_key">left</span>, <span class="py_key">right</span>)] &lt; -<span class="py_num">100</span>:<br>&nbsp; &nbsp; &nbsp; &nbsp; <span class="py_res">print</span> <span class="py_key">left</span>, <span class="py_key">right</span>, <span class="py_key">kerning</span>[(<span class="py_key">left</span>, <span class="py_key">right</span>)]<br></pre></div><div class="pythonsourcetitle"><a href="examples/workWithKerning3.py" target="new"><strong>➔ Download this.</strong></a></div>
+<div class="pythonoutput"><pre><span class="py_key">K</span> <span class="py_key">v</span> -<span class="py_num">111</span><br><span class="py_key">N</span> <span class="py_key">Atilde</span> -<span class="py_num">114</span><br><span class="py_key">W</span> <span class="py_key">o</span> -<span class="py_num">118</span><br><span class="py_key">W</span> <span class="py_key">odieresis</span> -<span class="py_num">118</span><br><span class="py_key">Acircumflex</span> <span class="py_key">Y</span> -<span class="py_num">103</span><br><span class="py_key">T</span> <span class="py_key">e</span> -<span class="py_num">153</span><br><span class="py_key">T</span> <span class="py_key">adieresis</span> -<span class="py_num">126</span><br><span class="py_key">T</span> <span class="py_key">odieresis</span> -<span class="py_num">133</span><br><span class="py_key">T</span> <span class="py_key">aacute</span> -<span class="py_num">126</span><br><span class="py_key">W</span> <span class="py_key">eacute</span> -<span class="py_num">141</span><br>..<span class="py_key">etc</span>..</pre></div>
+<p>
+	Another example of iterating through the kerning dictionary. This time each kern is tested if the value is less than -100, and only when this is the case the pair is printed. This shows you how you can write code which responds to particular kinds of kerns.
+</p>
+<div class="pythonsource"><pre># robothon 2009<br># work with kerning 4<br><span class="py_res">from</span> <span class="py_key">robofab</span>.<span class="py_key">world</span> <span class="py_res">import</span> <span class="py_key">CurrentFont</span><br><span class="py_key">font</span> = <span class="py_key">CurrentFont</span>()<br><span class="py_key">kerning</span> = <span class="py_key">font</span>.<span class="py_key">kerning</span><br><span class="py_res">for</span> <span class="py_key">left</span>, <span class="py_key">right</span> <span class="py_res">in</span> <span class="py_key">kerning</span>.<span class="py_key">keys</span>():<br>&nbsp; &nbsp; <span class="py_res">if</span> <span class="py_key">left</span> == <span class="py_str">"acircumflex"</span>:<br>&nbsp; &nbsp; &nbsp; &nbsp; <span class="py_res">print</span> <span class="py_key">left</span>, <span class="py_key">right</span>, <span class="py_key">kerning</span>[(<span class="py_key">left</span>, <span class="py_key">right</span>)]<br> <br></pre></div><div class="pythonsourcetitle"><a href="examples/workWithKerning4.py" target="new"><strong>➔ Download this.</strong></a></div>
+<div class="pythonoutput"><pre><span class="py_key">acircumflex</span> <span class="py_key">k</span> -<span class="py_num">7</span><br><span class="py_key">acircumflex</span> <span class="py_key">v</span> -<span class="py_num">38</span><br><span class="py_key">acircumflex</span> <span class="py_key">r</span> -<span class="py_num">4</span><br><span class="py_key">acircumflex</span> <span class="py_key">u</span> -<span class="py_num">4</span><br><span class="py_key">acircumflex</span> <span class="py_key">y</span> -<span class="py_num">31</span><br><span class="py_key">acircumflex</span> <span class="py_key">j</span> -<span class="py_num">26</span><br>..<span class="py_key">etc</span>..</pre></div>
+<p>
+	This script prints all kerns with <strong>acircumflex</strong> as first glyph.
+</p>
+<h3>Building glyphs</h3>
+<img src="http://robofab.com/img/
+ondrawmodel_20.gif" />
+<img src="http://robofab.com/img/
+ondrawmodel_26.gif" />
+<p>
+	A particularly interesting topic of scripting is building glyphs out of component parts. If a font already has all the parts, a script can, in many cases, assemble the accented versions. An overview  of <a href="http://robofab.com/howto/buildingaccents.html" class="reference" target="docs">glyph building options is in the how-to section of the Robofab docs</a>. The first example takes a look at all necessary ingredients: making a new glyph, adding parts and finishing it. Then we'll look at more efficient ways.
+</p>
+<div class="pythonsource"><pre># robothon 2009<br># building a glyph from parts<br># the hard way<br><span class="py_res">from</span> <span class="py_key">robofab</span>.<span class="py_key">world</span> <span class="py_res">import</span> <span class="py_key">CurrentFont</span><br> <br><span class="py_key">f</span> = <span class="py_key">CurrentFont</span>()<br> <br># make a new glyph<br><span class="py_key">f</span>.<span class="py_key">newGlyph</span>(<span class="py_str">"aacute"</span>)<br> <br># add the component for the base glyph, a<br><span class="py_key">f</span>[<span class="py_str">"aacute"</span>].<span class="py_key">appendComponent</span>(<span class="py_str">"a"</span>)<br> <br># add the component for the accent, acute<br># note it has an offset<br><span class="py_key">f</span>[<span class="py_str">"aacute"</span>].<span class="py_key">appendComponent</span>(<span class="py_str">"acute"</span>, (<span class="py_num">200</span>, <span class="py_num">0</span>))<br> <br># set the width too<br><span class="py_key">f</span>[<span class="py_str">"aacute"</span>].<span class="py_key">width</span> = <span class="py_key">f</span>[<span class="py_str">"a"</span>].<span class="py_key">width</span><br><span class="py_key">f</span>.<span class="py_key">update</span>()<br> <br></pre></div><div class="pythonsourcetitle"><a href="examples/buildingAccents1.py" target="new"><strong>➔ Download this.</strong></a></div>
+<p>
+	Let's have a look at that line by line. <strong>f.newGlyph("aacute")</strong>. The <strong>newGlyph()</strong> of the <strong>Font</strong> object creates a new glyph and names it <strong>"aacute"</strong>. Then we can get to the new glyph by asking the font. The <strong>Glyph</strong> object has a <strong>appendComponent()</strong> method, which takes a glyphName of the glyph you want to add as a component and optionally an offset coordinate. This you can see in the line where the <strong>acute</strong> glyph is added. Then the width of the new glyph is set to the width of the original glyph. Finally FontLab is told to update.
+</p>
+<p>
+Well, that's going to be an awful lot of code if you have to write 4 lines of code for each new letter. There are other ways of going about this, using FontLab's <strong>Anchor</strong> points. </p>
+<h3>glyph.generateGlyph()</h3>
+<p>
+	RoboFab has a database of glyph constructions based on the Adobe Glyph List. Have a look in your RoboFab code folder, <strong>robofab/Data/GlyphConstruction.txt</strong>. The RoboFab list contains information about where components should be connected and what the anchor points are called.
+</p>
+<div class="pythonsource"><pre><span class="py_key">Acircumflexdotaccent</span>: <span class="py_key">A</span> <span class="py_key">circumflex</span>.<span class="py_key">top</span> <span class="py_key">dotaccent</span>.<span class="py_key">bottom</span></pre></div>
+<p>
+	This entry shows that Acircumflexdotaccent is constructed with components from A, a circumflex using the <strong>top</strong> anchor, and dotaccent using the <strong>bottom</strong> anchor. In order to make this work, you need to add anchor points to your glyphs and accents. Check the FontLab manual for instructions. For instance the "a" has an anchor point named "top", the "acute" glyph has one named "_top".
+</p>
+<div class="pythonsource"><pre># building a glyph from parts<br><span class="py_res">from</span> <span class="py_key">robofab</span>.<span class="py_key">world</span> <span class="py_res">import</span> <span class="py_key">CurrentFont</span><br><span class="py_key">f</span> = <span class="py_key">CurrentFont</span>()<br><span class="py_key">font</span>.<span class="py_key">generateGlyph</span>(<span class="py_str">"aacute"</span>)</pre></div>
+<p>
+	This creates a new glyph at "aacute", it puts all the components in the right place and sets the width.
+</p>
+<h3>glyph.compileGlyph()</h3>
+<p>
+	Suppose you want to create glyphs using anchor points, but the glyphs don't have entries in Robofab's <strong>GlyphConstruction.txt</strong> list. What to do? Editing GlyphConstruction.txt is not recommended because you will loose your changes when you install a new version of RoboFab. Glyph has another method: <strong>compileGlyph()</strong>. This method, like generateGlyph, builds a new glyph with components, but you get to provide the list and tell which anchor points you want to use. CompileGlyph takes a list of accents and anchors. It will follow the list and allow "stacking" of accents.
+</p>
+<div class="pythonsource"><pre># robothon 2009
+	<br># Compile a new glyph from a list of accents and required anchors
+	<br># Demo of multiple accents chaining together, or "stacking".
+	<br># For this example you need to set&nbsp; up a couple of things
+	<br># in your test font:
+	<br>#&nbsp; &nbsp; - base glyph "a", with anchor "top" and anchor "bottom"
+	<br>#&nbsp; &nbsp; - glyph "dieresis" with anchor "_top" and anchor "top"
+	<br>#&nbsp; &nbsp; - glyph "acture" with anchor "_top"
+	<br>#&nbsp; &nbsp; - glyph "cedilla" with anchor "_bottom"
+	<br>#
+	<br>
+	<br><span class="py_res">from</span> <span class="py_key">robofab</span>.<span class="py_key">world</span> <span class="py_res">import</span> <span class="py_key">CurrentFont</span>
+	<br><span class="py_key">font</span> = <span class="py_key">CurrentFont</span>()
+	<br>
+	<br># this is a list of tuples
+	<br># each tuple has the name of the accent as first element
+	<br># and the name of the anchor which to use as the second element
+	<br><span class="py_key">accentList</span> = [(<span class="py_str">"dieresis"</span>, <span class="py_str">"top"</span>),
+	<br>&nbsp; &nbsp; (<span class="py_str">"acute"</span>, <span class="py_str">"top"</span>),
+	<br>&nbsp; &nbsp; (<span class="py_str">"cedilla"</span>, <span class="py_str">"bottom"</span>)]
+	<br>
+	<br># The accents are compiled in this order, so first
+	<br>#&nbsp; &nbsp; "dieresis" connects to "a" using "top" anchor
+	<br>#&nbsp; &nbsp; "acute" connects to dieresis, using the next "top" anchor
+	<br>
+	<br><span class="py_key">font</span>.<span class="py_key">compileGlyph</span>(<span class="py_str">"myCompiledGlyph"</span>, <span class="py_str">"a"</span>, <span class="py_key">accentList</span>)
+	<br><span class="py_key">font</span>.<span class="py_key">update</span>()
+	<br>
+	<br></pre></div><div class="pythonsourcetitle"><a href="examples/compileGlyph.py" target="new"><strong>➔ Download this.</strong></a></div>
+	<h2>Next</h2>
+	<p>
+		The Robofab stuff will continue with:
+		<a href="../talks/robofab_session5.html">Scripting for interpolation</a>
+	</p>
+	<h2>Step by Step</h2>
+	<p>
+		
+		<ul class="bonbon_locallink"><li><a href="index.html">RoboFab Step by step</a>: Common procedures and objects.</li>
+		<li><a href="basic.html">Basic Python</a>: Some rules, syntax.</li>
+		<li><a href="robofab_session1.html">Font object, Info object</a>: Introduction to Font and Info objects, with examples.</li>
+		<li><a href="robofab_session2.html">Glyph object and Pen object</a>: Introduction to Glyph and Pen objects</li>
+		<li>
+			<a href="robofab_session3.html">Kerning object and glyph building</a>: Introduction to the Kerning object, and a closer look at building glyphs from parts.
+		</li>
+		<li>
+			<a href="robofab_session5.html">Interpolation</a>: Scripting for interpolation
+		</li>
+		<li>
+			<a href="robofab_session6.html">Production</a>: Scripting for production
+		</li>
+		<li>
+			<a href="robofab_session4.html">NoneLab</a>: Adventures in NoneLab, scripting outside the box
+		</li>
+		</ul>
+		</p>
+	</div>
+</body></html>

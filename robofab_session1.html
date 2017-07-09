@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>
+Font and Info objects
+</title>
+<link href="../default.css" type="text/css" rel="stylesheet" />
+<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700' rel='stylesheet' type='text/css'>
+<link href="../code/robothon06/py2html.css" type="text/css" rel="stylesheet" />
+</head><body>
+<div class="leftcontent">
+<p class="menu">
+	<a href="../index.html">
+		Home
+	</a>
+	
+	
+</p>
+<p class="menu">
+	<a href="../howto/index.html">
+		How to's
+	</a>
+	<br />
+	<a href="index.html">
+		Step by step intro
+	</a>
+	<br />
+	<a href="../objects/index.html">
+		Object reference
+	</a>
+</p>
+</div>
+<div class="content">
+<h1>
+Font &amp; Info objects
+</h1>
+<img src="http://robofab.com/img/
+offdrawmodel_07.gif" width="140" height="96" />
+<h2>
+Code!
+</h2>
+<p>
+	So now then, you should have your editor fired up. Your RoboFab installed. Locate the
+	<strong>
+	output
+	</strong>
+	window as well.
+</p>
+<div class="pythonsource"><pre><span class="py_res">import</span> <span class="py_key">robofab</span>.<span class="py_key">world</span></pre></div>
+<p>
+	If that runs without problems you're good to go. If a new window pops up with a <strong>traceback</strong> like this it means there's something wrong with the installation.
+</p>
+<div class="pythonoutput"><pre><span class="py_key">Traceback</span> (<span class="py_key">most</span> <span class="py_key">recent</span> <span class="py_key">call</span> <span class="py_key">last</span>):<br><span class="py_key">File</span> <span class="py_str">"&lt;string&gt;"</span>, <span class="py_key">line</span> <span class="py_num">1</span>, <span class="py_res">in</span><span class="py_com"> </span><span class="py_com">?</span><br><span class="py_key">ImportError</span>: <span class="py_key">No</span> <span class="py_key">module</span> <span class="py_key">named</span> <span class="py_key">robofab</span>.<span class="py_key">world</span></pre></div>
+<p>
+	In this documentation, stuff in the output window is indicated with a tinted background. Whenever something is printed in Python code it will end up in the output window.
+</p>
+<h2>
+Huh, import ?
+</h2>
+<p>
+	Python can do a lot of different things. Some of its functionality is always available (the
+	<strong>
+	built-in
+	</strong>
+	things) but most of it is stored in seperate
+	<strong>
+	modules</strong>. When you want to use code from a different module, you need to
+	<strong>
+	import
+	</strong>
+	it first so that Python knows it needs to look somewhere else for objects, functions and stuff. Most of the Robofab stuff is stored in the
+	<strong>
+	robofab.world
+	</strong>
+	module. Notice that dot there? The dot syntax also works for modules and modules within modules. If you want to import a module and Python can't find it, you will get a traceback with an <strong>ImportError</strong>. You can also import specific things from another module, then you write:
+</p>
+<div class="pythonsource"><pre><span class="py_res">from</span> <span class="py_key">someModule</span> <span class="py_res">import</span> <span class="py_key">oneSpecificThing</span><br><span class="py_res">from</span> <span class="py_key">someModule</span>.<span class="py_key">subModule</span> <span class="py_res">import</span> <span class="py_key">oneSpecificThing</span><br><span class="py_res">from</span> <span class="py_key">someModule</span> <span class="py_res">import</span> <span class="py_key">anotherSpecificThing</span>, <span class="py_key">andAnotherThing</span><br> <br># and these:<br><span class="py_res">import</span> <span class="py_key">someModule</span><br><span class="py_res">import</span> <span class="py_key">someModule</span>.<span class="py_key">subModule</span></pre></div>
+<p>
+	We'll need to import a couple of useful functions from the robofab module to get started. To begin with, we'll look at <strong>CurrentFont</strong> and <strong>CurrentGlyph</strong>.
+</p>
+<h2>CurrentFont()</h2>
+<p>
+	So, suppose you have FontLab, and a font file open. Make sure it is a font you can trash if you have to, and not the single copy of the production master of your newest bestseller. How do you get started talking to that font in Python? Use the <strong>CurrentFont()</strong> function. This is a special function which will return an object which represents the front most font. When there are no fonts it will return <strong>None</strong>.
+</p>
+<p>
+	This is how you import CurrentFont:
+</p>
+<div class="pythonsource"><pre><span class="py_res">from</span> <span class="py_key">robofab</span>.<span class="py_key">world</span> <span class="py_res">import</span> <span class="py_key">CurrentFont</span><br><span class="py_res">print</span> <span class="py_key">CurrentFont</span>()</pre></div>
+<div class="pythonoutput"><pre>&lt;<span class="py_key">RFont</span> <span class="py_key">font</span> <span class="py_res">for</span> <span class="py_key">DemoFont</span> <span class="py_key">Italic</span>&gt;</pre></div>
+<p>
+	A <a href="http://robofab.com/objects/font.html" target="new" class="reference">Font</a> object! We'll be using CurrentFont and the font object it returns shortly, but first let's have a look at CurrentFont's siblings: <strong>CurrentGlyph</strong> and <strong>AllFonts</strong>.
+</p>
+<div class="pythonsource"><pre># open a glyph in FL first!<br><span class="py_res">from</span> <span class="py_key">robofab</span>.<span class="py_key">world</span> <span class="py_res">import</span> <span class="py_key">CurrentGlyph</span><br><span class="py_res">print</span> <span class="py_key">CurrentGlyph</span>()</pre></div>
+<div class="pythonoutput"><pre>&lt;<span class="py_key">RGlyph</span> <span class="py_res">for</span> <span class="py_key">DemoFont</span>.<span class="py_key">ograve</span>&gt;</pre></div>
+<p>
+	<strong>CurrentGlyph()</strong> returns a <a href="http://robofab.com/objects/glyph.html" target="new" class="reference">Glyph</a> object for the glyph which is at the front. Usually this is the glyph that's open in the current edit window. If there is no edit window, it will be the first glyph of the selection in the font window. If there is no selection, and no edit window, CurrentGlyph will return None. So this is a useful place to start if you want to write a script which manipulates a single glyph and you want an object for that glyph.
+</p>
+<div class="pythonsource"><pre># open a couple of fonts in FL first!<br><span class="py_res">from</span> <span class="py_key">robofab</span>.<span class="py_key">world</span> <span class="py_res">import</span> <span class="py_key">AllFonts</span><br><span class="py_res">print</span> <span class="py_key">AllFonts</span>()</pre></div>
+<div class="pythonoutput"><pre>[&lt;<span class="py_key">RFont</span> <span class="py_key">font</span> <span class="py_res">for</span> <span class="py_key">MyDemoFont</span>&gt;,<br>&lt;<span class="py_key">RFont</span> <span class="py_key">font</span> <span class="py_res">for</span> <span class="py_key">AnotherFont</span> <span class="py_key">Plain</span>&gt;,<br>&lt;<span class="py_key">RFont</span> <span class="py_key">font</span> <span class="py_res">for</span> <span class="py_key">AnotherFont</span> <span class="py_key">Italic</span>&gt;]</pre></div>
+<p>
+	<strong>AllFonts()</strong> returns a list with Font objects, one object for each open font. CurrentFont, CurrentGlyph and AllFonts live in the robofab.world module. They're useful for writing small scripts in FontLab.
+</p>
+<h2>Some attributes of the Font object</h2>
+<p>
+	So what are the things we can ask the Font object about? What attributes do font objects have? Let's have a look (at the documentation!).
+</p>
+<div class="pythonsource"><pre># open a couple of fonts in FL first!<br><span class="py_res">from</span> <span class="py_key">robofab</span>.<span class="py_key">world</span> <span class="py_res">import</span> <span class="py_key">CurrentFont</span><br><span class="py_key">font</span> = <span class="py_key">CurrentFont</span>()<br><span class="py_res">print</span> <span class="py_key">font</span>.<span class="py_key">path</span><br><span class="py_res">print</span> <span class="py_key">font</span>.<span class="py_key">kerning</span><br><span class="py_res">print</span> <span class="py_key">font</span>.<span class="py_key">info</span></pre></div>
+<div class="pythonoutput"><pre>/<span class="py_key">aFolder</span>/<span class="py_key">anotherFolder</span>/<span class="py_key">demoStuff</span>/<span class="py_key">myFont</span>.<span class="py_key">vfb</span><br>&lt;<span class="py_key">RKerning</span> <span class="py_res">for</span> <span class="py_key">MyFont</span> <span class="py_key">Plain</span>&gt;<br>&lt;<span class="py_key">RInfo</span> <span class="py_res">for</span> <span class="py_key">MyFont</span> <span class="py_key">Plain</span>&gt;</pre></div>
+<p>
+	Hang on! that didn't print anything that looks like kerning, and what's that font.info thing? Remember that objects can contain objects? The object model splits all font related data into smaller, easier to manage pieces. So a <strong>Font</strong> object has one single <strong>Info</strong> object which in turn stores all of the naming and dimensions. Same for font.kerning, it's an object which represents all kerning data of the font. We'll get back to the <a href="http://robofab.com/objects/kerning.html" target="new" class="reference">kerning object</a> later.
+</p>
+<h2>Some Info attributes</h2>
+<p>
+	The <strong>Info</strong> object stores all of the <a href="http://robofab.com/objects/info.html" target="new" class="reference">font's names, key dimensions</a> etc.
+</p>
+<div class="pythonsource"><pre># robothon 2009<br># getting data from the info object<br> <br><span class="py_res">from</span> <span class="py_key">robofab</span>.<span class="py_key">world</span> <span class="py_res">import</span> <span class="py_key">CurrentFont</span><br> <br><span class="py_key">font</span> = <span class="py_key">CurrentFont</span>()<br># naming attributes<br><span class="py_res">print</span> <span class="py_key">font</span>.<span class="py_key">info</span>.<span class="py_key">familyName</span><br><span class="py_res">print</span> <span class="py_key">font</span>.<span class="py_key">info</span>.<span class="py_key">styleName</span><br><span class="py_res">print</span> <span class="py_key">font</span>.<span class="py_key">info</span>.<span class="py_key">fullName</span><br># dimension attributes<br><span class="py_res">print</span> <span class="py_key">font</span>.<span class="py_key">info</span>.<span class="py_key">unitsPerEm</span><br><span class="py_res">print</span> <span class="py_key">font</span>.<span class="py_key">info</span>.<span class="py_key">ascender</span><br><span class="py_res">print</span> <span class="py_key">font</span>.<span class="py_key">info</span>.<span class="py_key">descender</span><br></pre></div><div class="pythonsourcetitle"><a href="examples/someFontInfoAttributes.py" target="new"><strong>➔ Download this.</strong></a></div>
+<div class="pythonoutput"><pre><span class="py_key">MyDemo</span><br><span class="py_key">Plain</span><br><span class="py_key">MyDemo</span> <span class="py_key">Plain</span><br><span class="py_num">1000</span><br><span class="py_num">720</span><br>-<span class="py_num">280</span></pre></div>
+<p>
+	Almost all attributes can also be set to new values. This is when it starts getting interesting.
+</p>
+<div class="pythonsource"><pre># robothon 2009<br># setting data in the info object<br> <br><span class="py_res">from</span> <span class="py_key">robofab</span>.<span class="py_key">world</span> <span class="py_res">import</span> <span class="py_key">CurrentFont</span><br> <br><span class="py_key">font</span> = <span class="py_key">CurrentFont</span>()<br># naming attributes<br><span class="py_key">font</span>.<span class="py_key">info</span>.<span class="py_key">familyName</span> = <span class="py_str">"MyFamily"</span><br><span class="py_res">print</span> <span class="py_key">font</span>.<span class="py_key">info</span>.<span class="py_key">familyName</span><br><span class="py_key">font</span>.<span class="py_key">info</span>.<span class="py_key">styleName</span> = <span class="py_str">"Roman"</span><br><span class="py_res">print</span> <span class="py_key">font</span>.<span class="py_key">info</span>.<span class="py_key">styleName</span><br><span class="py_key">font</span>.<span class="py_key">info</span>.<span class="py_key">fullName</span> = <span class="py_key">font</span>.<span class="py_key">info</span>.<span class="py_key">familyName</span> + <span class="py_str">'-'</span> + <span class="py_key">font</span>.<span class="py_key">info</span>.<span class="py_key">styleName</span><br><span class="py_res">print</span> <span class="py_key">font</span>.<span class="py_key">info</span>.<span class="py_key">fullName</span><br># dimension attributes<br><span class="py_key">font</span>.<span class="py_key">info</span>.<span class="py_key">ascender</span> = <span class="py_num">600</span><br><span class="py_res">print</span> <span class="py_key">font</span>.<span class="py_key">info</span>.<span class="py_key">ascender</span><br><span class="py_key">font</span>.<span class="py_key">info</span>.<span class="py_key">descender</span> = -<span class="py_num">400</span><br><span class="py_res">print</span> <span class="py_key">font</span>.<span class="py_key">info</span>.<span class="py_key">descender</span><br><span class="py_key">font</span>.<span class="py_key">update</span>()<br> <br></pre></div><div class="pythonsourcetitle"><a href="examples/someFontInfoAttributes2.py" target="new"><strong>➔ Download this.</strong></a></div>
+<div class="pythonoutput"><pre><span class="py_key">MyFamily</span><br><span class="py_key">Roman</span><br><span class="py_key">MyFamily</span>-<span class="py_key">Roman</span><br><span class="py_num">600</span><br>-<span class="py_num">400</span></pre></div>
+<p>
+	A useful method of the Info object is <strong>autoNaming()</strong>. It assumes you have entered correct data for <strong>familyName</strong> and <strong>styleName</strong>. Based on these 2 values, a bunch of variations and permutations are generated and stored in the appropriate fields. These are the basic names, no fancy OpenType stuff.
+</p>
+<div class="pythonsource"><pre># robothon 2009<br># get a particular glyph<br> <br><span class="py_res">from</span> <span class="py_key">robofab</span>.<span class="py_key">world</span> <span class="py_res">import</span> <span class="py_key">CurrentFont</span><br><span class="py_key">font</span> = <span class="py_key">CurrentFont</span>()<br> <br><span class="py_key">font</span>.<span class="py_key">info</span>.<span class="py_key">familyName</span> = <span class="py_str">"myFamilyName"</span><br><span class="py_key">font</span>.<span class="py_key">info</span>.<span class="py_key">styleName</span> = <span class="py_str">"myStyleName"</span><br> <br><span class="py_key">font</span>.<span class="py_key">info</span>.<span class="py_key">autoNaming</span>()<br> <br><span class="py_res">print</span> <span class="py_key">font</span>.<span class="py_key">info</span>.<span class="py_key">fullName</span><br><span class="py_res">print</span> <span class="py_key">font</span>.<span class="py_key">info</span>.<span class="py_key">fontName</span><br><span class="py_res">print</span> <span class="py_key">font</span>.<span class="py_key">info</span>.<span class="py_key">fondName</span></pre></div><div class="pythonsourcetitle"><a href="examples/infoAutonaming.py" target="new"><strong>➔ Download this.</strong></a></div>
+<div class="pythonoutput"><pre><span class="py_key">myFamilyName</span> <span class="py_key">myStyleName</span><br><span class="py_key">myFamilyName</span>-<span class="py_key">myStyleName</span><br><span class="py_key">myFamilyName</span></pre></div>
+<h2>Getting to glyphs</h2>
+<p>
+	We've seen <strong>CurrentGlyph</strong> and <strong>CurrentFont</strong>, but how do you we get to other glyphs in a font? A <strong>Font</strong> object contains glyphs and this is what you do to get to them:
+</p>
+<div class="pythonsource"><pre># robothon 2009<br># get a particular glyph<br> <br><span class="py_res">from</span> <span class="py_key">robofab</span>.<span class="py_key">world</span> <span class="py_res">import</span> <span class="py_key">CurrentFont</span><br><span class="py_key">font</span> = <span class="py_key">CurrentFont</span>()<br><span class="py_res">print</span> <span class="py_key">font</span>[<span class="py_str">'A'</span>]<br><span class="py_res">print</span> <span class="py_key">font</span>[<span class="py_str">'Adieresis'</span>]<br><span class="py_res">print</span> <span class="py_key">font</span>[<span class="py_str">'two'</span>]<br><span class="py_res">print</span> <span class="py_key">font</span>[<span class="py_str">'afii12934'</span>]<br> <br></pre></div><div class="pythonsourcetitle"><a href="examples/getSomeGlyphs.py" target="new"><strong>➔ Download this.</strong></a></div>
+<div class="pythonoutput"><pre>&lt;<span class="py_key">RGlyph</span> <span class="py_res">for</span> <span class="py_key">MyFamily</span>-<span class="py_key">Roman</span>.<span class="py_key">A</span>&gt;<br>&lt;<span class="py_key">RGlyph</span> <span class="py_res">for</span> <span class="py_key">MyFamily</span>-<span class="py_key">Roman</span>.<span class="py_key">Adieresis</span>&gt;<br>&lt;<span class="py_key">RGlyph</span> <span class="py_res">for</span> <span class="py_key">MyFamily</span>-<span class="py_key">Roman</span>.<span class="py_key">two</span>&gt;<br>&lt;<span class="py_key">RGlyph</span> <span class="py_res">for</span> <span class="py_key">MyFamily</span>-<span class="py_key">Roman</span>.<span class="py_key">afii12934</span>&gt;</pre></div>
+<p>
+	The Font object in this case behaves like a Python dictionary object. Between the <strong>[</strong> square brackets <strong>]</strong>  you can ask for a glyph by its (postscript) name. In Python speak:
+</p>
+<div class="pythonsource"><pre><span class="py_key">value</span> = <span class="py_key">dictionary</span>[<span class="py_key">key</span>]</pre></div>
+<p>
+	If you want to look at all glyphs in a font, one at a time, you can <strong>loop</strong> or <strong>iterate</strong> through the font. It's written like this:
+</p>
+<div class="pythonsource"><pre># robothon 2009<br># iteration through glyphs in a font<br> <br><span class="py_res">from</span> <span class="py_key">robofab</span>.<span class="py_key">world</span> <span class="py_res">import</span> <span class="py_key">CurrentFont</span><br> <br><span class="py_key">font</span> = <span class="py_key">CurrentFont</span>()<br><span class="py_res">print</span> <span class="py_str">"font has %d glyphs"</span> % <span class="py_key">len</span>(<span class="py_key">font</span>)<br><span class="py_res">for</span> <span class="py_key">glyph</span> <span class="py_res">in</span> <span class="py_key">font</span>:<br>&nbsp; &nbsp; <span class="py_res">print</span> <span class="py_key">glyph</span><br> <br></pre></div><div class="pythonsourcetitle"><a href="examples/iterateFont.py" target="new"><strong>➔ Download this.</strong></a></div>
+<div class="pythonoutput"><pre><span class="py_key">font</span> <span class="py_key">has</span> <span class="py_num">201</span> <span class="py_key">glyphs</span><br>&lt;<span class="py_key">RGlyph</span> <span class="py_res">for</span> <span class="py_key">MyFamily</span>-<span class="py_key">Roman</span>.<span class="py_key">aring</span>&gt;<br>&lt;<span class="py_key">RGlyph</span> <span class="py_res">for</span> <span class="py_key">MyFamily</span>-<span class="py_key">Roman</span>.<span class="py_key">ordfeminine</span>&gt;<br>&lt;<span class="py_key">RGlyph</span> <span class="py_res">for</span> <span class="py_key">MyFamily</span>-<span class="py_key">Roman</span>.<span class="py_key">less</span>&gt;<br>&lt;<span class="py_key">RGlyph</span> <span class="py_res">for</span> <span class="py_key">MyFamily</span>-<span class="py_key">Roman</span>.<span class="py_key">ograve</span>&gt;<br>&lt;<span class="py_key">RGlyph</span> <span class="py_res">for</span> <span class="py_key">MyFamily</span>-<span class="py_key">Roman</span>.<span class="py_key">V</span>&gt;<br>&lt;<span class="py_key">RGlyph</span> <span class="py_res">for</span> <span class="py_key">MyFamily</span>-<span class="py_key">Roman</span>.<span class="py_key">dollar</span>&gt;<br>&lt;<span class="py_key">RGlyph</span> <span class="py_res">for</span> <span class="py_key">MyFamily</span>-<span class="py_key">Roman</span>.<span class="py_key">circumflex</span>&gt;<br>..<span class="py_key">etc</span>..</pre></div>
+<p>
+	A couple of things to look for in the example above:
+	<ul>
+		<li><strong>len(font)</strong> shows Python's built-in <strong>len()</strong> function, which will try to count the thing its given and it will return the number. Fonts like to be counted and they respond with the number of glyphs. In this case the font has 201 glyphs.</li>
+		<li>
+			All the glyphs are mixed up! there is no particular order! chaos! In Python dictionaries there is no standard order in which the keys appear. It will iterate through all the glyphs though.
+		</li>
+		<li>Notice the indentation at the beginning of the line under <strong>for glyph in font:</strong> This is Python's way of showing that all of the code that's indented belongs to the same loop. When the code is <strong>dedented</strong> again that's where Python will continue when it is done with the loop.
+		</li>
+	</ul>
+</p>
+<p>
+	When  you want to be sure about the order in which the glyphs are looked at, you need to sort them first. Example:
+</p>
+<div class="pythonsource"><pre># iteration through alphabetically sorted glyphnames<br><span class="py_res">from</span> <span class="py_key">robofab</span>.<span class="py_key">world</span> <span class="py_res">import</span> <span class="py_key">CurrentFont</span><br> <br><span class="py_key">font</span> = <span class="py_key">CurrentFont</span>()<br><span class="py_res">print</span> <span class="py_str">"font has %d glyphs"</span> % <span class="py_key">len</span>(<span class="py_key">font</span>)<br> <br># names is now a list of strings, the names of the glyphs<br># not the glyphs themselves!<br><span class="py_key">names</span> = <span class="py_key">font</span>.<span class="py_key">keys</span>()<br> <br># the list of names is sorted<br><span class="py_key">names</span>.<span class="py_key">sort</span>()<br> <br># now we iterate through the list of names<br><span class="py_res">for</span> <span class="py_key">glyphName</span> <span class="py_res">in</span> <span class="py_key">names</span>:<br>&nbsp; &nbsp; # now we ask for the glyph with glyphName<br>&nbsp; &nbsp; <span class="py_res">print</span> <span class="py_key">font</span>[<span class="py_key">glyphName</span>]</pre></div>
+<div class="pythonoutput"><pre><span class="py_key">font</span> <span class="py_key">has</span> <span class="py_num">201</span> <span class="py_key">glyphs</span><br>&lt;<span class="py_key">RGlyph</span> <span class="py_res">for</span> <span class="py_key">MyFamily</span>-<span class="py_key">Roman</span>.<span class="py_key">A</span>&gt;<br>&lt;<span class="py_key">RGlyph</span> <span class="py_res">for</span> <span class="py_key">MyFamily</span>-<span class="py_key">Roman</span>.<span class="py_key">AE</span>&gt;<br>&lt;<span class="py_key">RGlyph</span> <span class="py_res">for</span> <span class="py_key">MyFamily</span>-<span class="py_key">Roman</span>.<span class="py_key">Aacute</span>&gt;<br>&lt;<span class="py_key">RGlyph</span> <span class="py_res">for</span> <span class="py_key">MyFamily</span>-<span class="py_key">Roman</span>.<span class="py_key">Acircumflex</span>&gt;<br>&lt;<span class="py_key">RGlyph</span> <span class="py_res">for</span> <span class="py_key">MyFamily</span>-<span class="py_key">Roman</span>.<span class="py_key">Adieresis</span>&gt;<br>&lt;<span class="py_key">RGlyph</span> <span class="py_res">for</span> <span class="py_key">MyFamily</span>-<span class="py_key">Roman</span>.<span class="py_key">Agrave</span>&gt;<br>&lt;<span class="py_key">RGlyph</span> <span class="py_res">for</span> <span class="py_key">MyFamily</span>-<span class="py_key">Roman</span>.<span class="py_key">Aring</span>&gt;<br>&lt;<span class="py_key">RGlyph</span> <span class="py_res">for</span> <span class="py_key">MyFamily</span>-<span class="py_key">Roman</span>.<span class="py_key">Atilde</span>&gt;<br>&lt;<span class="py_key">RGlyph</span> <span class="py_res">for</span> <span class="py_key">MyFamily</span>-<span class="py_key">Roman</span>.<span class="py_key">B</span>&gt;<br>..<span class="py_key">etc</span>..</pre></div>
+<h2>Step by Step</h2>
+<p>
+	
+	<ul class="bonbon_locallink"><li><a href="index.html">RoboFab Step by step</a>: Common procedures and objects.</li>
+</div>
+<li><a href="basic.html">Basic Python</a>: Some rules, syntax.</li>
+<li>
+<a href="robofab_session1.html">Font object, Info object</a>: Introduction to Font and Info objects, with examples.</li>
+<li>
+<a href="robofab_session2.html">Glyph object and Pen object</a>: Introduction to Glyph and Pen objects</li>
+<li>
+<a href="robofab_session3.html">Kerning object and glyph building</a>: Introduction to the Kerning object, and a closer look at building glyphs from parts.</li>
+<li>
+<a href="robofab_session5.html">Interpolation</a>: Scripting for interpolation</li>
+<li>
+<a href="robofab_session6.html">Production</a>: Scripting for production</li>
+<li>
+<a href="robofab_session4.html">NoneLab</a>: Adventures in NoneLab, scripting outside the box</li>
+</ul>
+</p>
+</div>
+</body></html>
