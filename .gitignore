@@ -1,0 +1,10 @@
+
+
+# Leave out invisible files
+.DS_Store
+
+# Ignore Python .pyc files
+*.pyc
+
+# Older subversion folders
+.svn
